@@ -10,22 +10,38 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+/**
+ * read the list of symptoms and write a sorted list of symptoms with the
+ * curencys of curencys
+ * 
+ * @author jc
+ *
+ */
 public class AnalyticsCounter {
-	/*
-	 * private static int headacheCount = 0; private static int rashCount = 0;
-	 * private static int pupilCount = 0;
+	/**
+	 * create a file reader
 	 */
 	private ISymptomReader reader = new ReadSymptomDataFromFile("symptoms.txt");
 
-	// read the symtoms.txt file and send it on a list of strings
+	/**
+	 * read the symtoms.txt file and send it on a list of strings
+	 * 
+	 * @return List String
+	 */
 	private List<String> read() {
 		return reader.getSymptoms();
 
 	}
 
-// get the list of strings and returns it on a treeMap ordered by letter and with the  number of each symptoms
+	/**
+	 * get the list of strings and returns it on a treeMap ordered by letter and
+	 * with the number of each symptoms
+	 * 
+	 * @param symptoms list of the symptoms
+	 * @return Treemap <String, Integer>
+	 */
 
-	private static TreeMap<String, Integer> comput(List<String> symptoms) {
+	private TreeMap<String, Integer> comput(List<String> symptoms) {
 		TreeMap<String, Integer> result = new TreeMap<String, Integer>();
 		for (String symptom : symptoms) {
 			if (result.containsKey(symptom)) {
@@ -39,8 +55,14 @@ public class AnalyticsCounter {
 		return result;
 	}
 
-// write the treemap  ( with all the symtoms ordered and with the numbers of each symptom )on a file ( result.txt)
-	private static void writeSymptoms(TreeMap<String, Integer> list, String fileName) {
+	/**
+	 * write the treemap ( with all the symptoms ordered and with the numbers of
+	 * each symptom )on a file ( result.txt)
+	 * 
+	 * @param list     list of sorted symptoms
+	 * @param fileName name of the target file
+	 */
+	private void writeSymptoms(TreeMap<String, Integer> list, String fileName) {
 		File file = new File(fileName);
 		try {
 			FileWriter writer = new FileWriter(file);
@@ -55,9 +77,8 @@ public class AnalyticsCounter {
 			while (it.hasNext()) {
 
 				Map.Entry mentry = (Map.Entry) it.next();
-				System.out.print(mentry.getKey());
-				System.out.println("," + mentry.getValue());
-				bw.write(mentry.getKey() + "," + mentry.getValue());
+
+				bw.write(mentry.getKey() + "=" + mentry.getValue());
 				bw.newLine();
 			}
 
@@ -70,33 +91,14 @@ public class AnalyticsCounter {
 	}
 
 	public static void main(String args[]) throws Exception {
-		// first get input
-		// instance of ReadSymtomDataFromFIle
 
 		ReadSymptomDataFromFile reader = new ReadSymptomDataFromFile("symptoms.txt");
+		AnalyticsCounter analyticsCounter = new AnalyticsCounter();
 		/*
 		 * send the result.txt fil into a list of String, send the list into a treemap
-		 * to order it, write the treemap into a file result.txt
+		 * to order it, write the treemap into a file result.out.txt
 		 */
-		writeSymptoms(comput(reader.getSymptoms()), "result.txt");
+		analyticsCounter.writeSymptoms(analyticsCounter.comput(reader.getSymptoms()), "results.out.txt");
 
-		/*
-		 * BufferedReader reader = new BufferedReader(new FileReader("symptoms.txt"));
-		 * String line = reader.readLine();
-		 * 
-		 * int i = 0; // set i to 0 int headCount = 0; // counts headaches while (line
-		 * != null) { i++; // increment i System.out.println("symptom from file: " +
-		 * line); if (line.equals("headache")) { headacheCount++;
-		 * System.out.println("number of headaches: " + headCount); } else if
-		 * (line.equals("rush")) { rashCount++; } else if (line.contains("pupils")) {
-		 * pupilCount++; }
-		 * 
-		 * line = reader.readLine(); // get another symptom }
-		 * 
-		 * // next generate output FileWriter writer = new FileWriter("result.out");
-		 * writer.write("headache: " + headacheCount + "\n"); writer.write("rash: " +
-		 * rashCount + "\n"); writer.write("dialated pupils: " + pupilCount + "\n");
-		 * writer.close();
-		 */
 	}
 }
